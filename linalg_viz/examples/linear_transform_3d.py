@@ -1,5 +1,9 @@
 """3D linear transformation with animation."""
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from linalg_viz import Vector, Matrix, show
 import math
 

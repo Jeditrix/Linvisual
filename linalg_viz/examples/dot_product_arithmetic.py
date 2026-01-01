@@ -4,8 +4,12 @@ Shows the actual numbers and step-by-step calculation:
 a₁×b₁ + a₂×b₂ + ... = result
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 import numpy as np
-from linalg_viz.scene.matrix_scene import MatrixScene
+from linalg_viz import MatrixScene
 
 # Define two vectors
 a = np.array([2, 3, 4])

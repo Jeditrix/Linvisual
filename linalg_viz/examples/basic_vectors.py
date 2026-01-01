@@ -1,5 +1,9 @@
 """Basic vector visualization."""
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from linalg_viz import Vector, show
 
 v1 = Vector(4, 1).color("red")

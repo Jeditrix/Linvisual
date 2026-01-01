@@ -151,26 +151,19 @@ scene.show()
 
 ## Examples
 
-The `linalg_viz/examples/` folder contains runnable examples:
+The `linalg_viz/examples/` folder contains runnable examples. Just run them directly:
 
 ```bash
-# Basic 2D vectors
-python -m linalg_viz.examples.basic_vectors
+cd linalg_viz/examples
 
-# Linear transformation animation
-python -m linalg_viz.examples.linear_transform
-
-# Eigenvector visualization
-python -m linalg_viz.examples.eigenvectors
-
-# 3D vectors and cross product
-python -m linalg_viz.examples.basic_3d
-python -m linalg_viz.examples.cross_product
-
-# Matrix arithmetic (step-by-step calculations)
-python -m linalg_viz.examples.matrix_vector_arithmetic
-python -m linalg_viz.examples.matrix_matrix_arithmetic
-python -m linalg_viz.examples.dot_product_arithmetic
+python basic_vectors.py          # Basic 2D vectors
+python linear_transform.py       # Linear transformation animation
+python eigenvectors.py           # Eigenvector visualization
+python basic_3d.py               # 3D vectors
+python cross_product.py          # Cross product
+python matrix_vector_arithmetic.py   # Matrix × vector step-by-step
+python matrix_matrix_arithmetic.py   # Matrix × matrix step-by-step
+python dot_product_arithmetic.py     # Dot product step-by-step
 ```
 
 ## API Reference

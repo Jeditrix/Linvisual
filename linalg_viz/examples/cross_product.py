@@ -4,6 +4,10 @@ Shows how the cross product creates a vector perpendicular to both input vectors
 The magnitude of a×b equals the area of the parallelogram formed by a and b.
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from linalg_viz import Vector, show
 
 # Two 3D vectors
