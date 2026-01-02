@@ -105,6 +105,7 @@ class MatrixScene:
         total_steps = rows + 2  # Extra frame at end
 
         for step in range(total_steps):
+            pygame.event.pump()  # Process events to prevent freeze
             self._animation_step = step
 
             # Clear and render
@@ -131,6 +132,7 @@ class MatrixScene:
         total_steps = rows_a * cols_b + 2  # Extra frame at end
 
         for step in range(total_steps):
+            pygame.event.pump()  # Process events to prevent freeze
             self._animation_step = step
 
             # Clear and render
@@ -156,6 +158,7 @@ class MatrixScene:
         total_steps = n + 2  # Extra frame at end
 
         for step in range(total_steps):
+            pygame.event.pump()  # Process events to prevent freeze
             self._animation_step = step
 
             # Clear and render
