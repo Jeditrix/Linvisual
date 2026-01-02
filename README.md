@@ -1,4 +1,4 @@
-# linalg-viz
+# Linvisual
 
 A simple to use Python library for visualizing linear algebra concepts.
 
