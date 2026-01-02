@@ -149,39 +149,55 @@ scene.show()
 
 The `linalg_viz/examples/` folder contains runnable examples:
 
-| Example | Command |
-|---------|---------|
-| ![Basic Vectors](assets/basic_vectors.gif) | `python basic_vectors.py` |
-| ![Linear Transform](assets/linear_transform.gif) | `python linear_transform.py` |
-| ![3D Vectors](assets/basic_3d.gif) | `python basic_3d.py` |
-| ![Matrix × Vector](assets/matrix_vector.gif) | `python matrix_vector_arithmetic.py` |
-| ![Matrix × Matrix](assets/matrix_multiply.gif) | `python matrix_matrix_arithmetic.py` |
-| ![Dot Product](assets/dot_product.gif) | `python dot_product_arithmetic.py` |
+### 2D Vectors
+| ![Basic Vectors](assets/basic_vectors.gif) | ![Linear Transform](assets/linear_transform.gif) |
+|:--:|:--:|
+| `python basic_vectors.py` | `python linear_transform.py` |
+
+### 3D Vectors
+| ![3D Vectors](assets/basic_3d.gif) | ![3D Transform](assets/linear_transform_3d.gif) |
+|:--:|:--:|
+| `python basic_3d.py` | `python linear_transform_3d.py` |
+
+### Matrix Arithmetic
+| ![Matrix × Vector](assets/matrix_vector.gif) |
+|:--:|
+| `python matrix_vector_arithmetic.py` |
+
+| ![Matrix × Matrix](assets/matrix_multiply.gif) |
+|:--:|
+| `python matrix_matrix_arithmetic.py` |
+
+| ![Dot Product](assets/dot_product.gif) |
+|:--:|
+| `python dot_product_arithmetic.py` |
 
 ## GIF Export
 
 Export animations to GIF for documentation or sharing:
 
 ```python
-from linalg_viz import MatrixScene
+from linalg_viz import Vector, Matrix, Scene, MatrixScene
 import numpy as np
 
+# --- Matrix Arithmetic ---
 scene = MatrixScene()
-
-# Matrix-vector multiplication
 M = np.array([[2, -1], [0, 4]])
 v = np.array([1, 2])
 scene.record_matrix_vector_multiply(M, v, "matrix_vector.gif")
 
-# Matrix-matrix multiplication
-A = np.array([[1, 2], [3, 4]])
-B = np.array([[5, 6], [7, 8]])
-scene.record_matrix_multiply(A, B, "matrix_multiply.gif")
+# --- Vector Animations ---
+M = Matrix([[2, 1], [0, 1]])
+scene = Scene(dim=2)
+v = Vector(1, 0).color("red").transform(M).animate()
+scene.add(v)
+scene._add_animation(v._pending_animation)
+scene.record_play("transform.gif", fps=20)  # Records until animation ends
 
-# Dot product
-a = np.array([2, 3, 4])
-b = np.array([1, -2, 3])
-scene.record_dot_product(a, b, "dot_product.gif")
+# Or record for a fixed duration
+scene = Scene(dim=2)
+scene.add(Vector(1, 1).color("blue"))
+scene.record("static.gif", duration=2.0, fps=15)
 ```
 
 ## API Reference
@@ -250,6 +266,10 @@ Scene(dim=2)                  # Create 2D or 3D scene
 scene.add(vector)             # Add vector to scene
 scene.show()                  # Display (blocking)
 scene.play()                  # Play animations
+
+# GIF Export
+scene.record("output.gif", duration=3.0, fps=30)  # Record fixed duration
+scene.record_play("output.gif", fps=30)           # Record until animations end
 ```
 
 ## License

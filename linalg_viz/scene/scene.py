@@ -5,6 +5,8 @@ from typing import List, Union, TYPE_CHECKING
 
 import pygame
 from pygame.locals import *
+from OpenGL.GL import glReadPixels, GL_RGB, GL_UNSIGNED_BYTE
+from PIL import Image
 
 from linalg_viz.scene.camera import Camera2D, Camera3D
 from linalg_viz.scene.grid import Grid2D, Grid3D
@@ -33,6 +35,10 @@ class Scene:
         self._animations: List[Animation] = []
         self._original_animations: List[Animation] = []
         self._timeline = Timeline()
+
+        # GIF recording
+        self._recording = False
+        self._frames: List[Image.Image] = []
 
         if dim == 2:
             self._camera: Union[Camera2D, Camera3D] = Camera2D(width, height)
@@ -282,3 +288,85 @@ class Scene:
     def play(self) -> None:
         self._timeline.play()
         self.show()
+
+    def _capture_frame(self) -> None:
+        """Capture current frame for GIF export."""
+        if not self._recording:
+            return
+        pixels = glReadPixels(0, 0, self._width, self._height, GL_RGB, GL_UNSIGNED_BYTE)
+        image = Image.frombytes("RGB", (self._width, self._height), pixels)
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+        self._frames.append(image)
+
+    def _save_gif(self, filename: str, fps: int = 10) -> None:
+        """Save recorded frames as GIF."""
+        if not self._frames:
+            return
+        duration = int(1000 / fps)
+        self._frames[0].save(
+            filename,
+            save_all=True,
+            append_images=self._frames[1:],
+            duration=duration,
+            loop=0
+        )
+        print(f"Saved GIF: {filename} ({len(self._frames)} frames)")
+
+    def record(self, filename: str, duration: float = 3.0, fps: int = 30) -> None:
+        """Record the animation to a GIF file.
+
+        Args:
+            filename: Output GIF filename
+            duration: How long to record in seconds
+            fps: Frames per second for the GIF
+        """
+        self._recording = True
+        self._frames = []
+        self._init_pygame()
+        self._timeline.play()
+
+        frame_time = 1.0 / fps
+        total_frames = int(duration * fps)
+
+        for _ in range(total_frames):
+            pygame.event.pump()
+            self._update(frame_time)
+            self._render()
+            self._capture_frame()
+
+        self._save_gif(filename, fps)
+        pygame.quit()
+        self._recording = False
+
+    def record_play(self, filename: str, fps: int = 30) -> None:
+        """Record animation until all animations complete.
+
+        Args:
+            filename: Output GIF filename
+            fps: Frames per second for the GIF
+        """
+        self._recording = True
+        self._frames = []
+        self._init_pygame()
+        self._timeline.play()
+
+        frame_time = 1.0 / fps
+        max_frames = 300  # Safety limit
+
+        frame_count = 0
+        while self._animations and frame_count < max_frames:
+            pygame.event.pump()
+            self._update(frame_time)
+            self._render()
+            self._capture_frame()
+            frame_count += 1
+
+        # Capture a few extra frames at the end
+        for _ in range(fps):  # 1 second of final state
+            pygame.event.pump()
+            self._render()
+            self._capture_frame()
+
+        self._save_gif(filename, fps)
+        pygame.quit()
+        self._recording = False
